@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins="*")
 @RequestMapping("/api/v1/user/todo")
 public class ToDoController {
 
