@@ -2,6 +2,7 @@ package com.ToDoList.ToDoList.services.impl;
 
 import com.ToDoList.ToDoList.entities.ToDo;
 import com.ToDoList.ToDoList.exceptions.ResourceNotFoundException;
+import com.ToDoList.ToDoList.records.ToDoRecord;
 import com.ToDoList.ToDoList.repositories.ToDoRepository;
 import com.ToDoList.ToDoList.services.ToDoService;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,11 @@ import java.util.List;
 public class ToDoServiceImpl implements ToDoService {
 
     private final ToDoRepository toDoRepository;
-    public ToDo createToDo(ToDo toDo) {return  toDoRepository.save(toDo);}
+    public ToDo createToDo(ToDoRecord toDoRecord) {
+        ToDo toDo=new ToDo();
+        toDo.setCompleted(false);
+        toDo.setTask(toDoRecord.task());
+        return  toDoRepository.save(toDo);}
 
     public ToDo getToDo(int toDoId){
         ToDo toDo=toDoRepository.findById(toDoId).orElseThrow(()->new ResourceNotFoundException("ToDo get", HttpStatus.INTERNAL_SERVER_ERROR.value(),HttpStatus.INTERNAL_SERVER_ERROR.name() , "Error! No data found"));
@@ -31,7 +36,11 @@ public class ToDoServiceImpl implements ToDoService {
         return  oldToDo;
     }
     public List<ToDo> getAllToDo(){
-        return  toDoRepository.findAll(Sort.by("task").ascending());
+        return  toDoRepository.findAll();
+    }
+
+    public List<ToDo> getByStatus(boolean status){
+        return  toDoRepository.findByIsCompleted(status);
     }
 
     public void deleteToDO(int toDoId){
