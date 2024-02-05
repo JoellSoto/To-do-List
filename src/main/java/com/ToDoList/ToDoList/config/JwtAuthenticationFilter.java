@@ -2,9 +2,11 @@ package com.ToDoList.ToDoList.config;
 
 import java.io.IOException;
 
+import com.ToDoList.ToDoList.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -59,6 +61,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				securityContext.setAuthentication(token);
 				SecurityContextHolder.setContext(securityContext);
+			}
+			else{
+                throw new ResourceNotFoundException("JWT Token", HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.name(), "Error! Invalid token");
 			}
 		}
 		
